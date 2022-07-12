@@ -10,7 +10,6 @@ public class DocumentSpawner : MonoBehaviour
     private void Awake() {
         for (int i = 0; i < 5 ; i++) {
             SpawnDocuments();
-            MoveDocs();
         }
     }
 
@@ -19,13 +18,15 @@ public class DocumentSpawner : MonoBehaviour
         Vector3 position = new Vector3(2.5f, 2.0f, 0);
 
         Instantiate(documentArray[index], position, Quaternion.identity);
-    }
 
-    public void MoveDocs() {
-        GameObject[] docs = GameObject.FindGameObjectsWithTag("Document");
+        GameObject[] reds = GameObject.FindGameObjectsWithTag("DocumentRed");
+        GameObject[] blues = GameObject.FindGameObjectsWithTag("DocumentBlue");
 
-        for (int i = 0; i < docs.Length; ++i) {
-            docs[i].GetComponent<PrefabMovement>().prefabMove();
+        for (int i = 0; i < reds.Length; ++i) {
+            reds[i].GetComponent<DocumentMovement>().documentMove();
+        }
+        for (int i = 0; i < blues.Length; ++i) {
+            blues[i].GetComponent<DocumentMovement>().documentMove();
         }
     }
 }

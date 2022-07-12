@@ -1,32 +1,39 @@
 using System.Collections;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    public int Count = 50;
+    public int count = 50;
+    public bool lastKey = false;
 
     public GameObject keyLeft;
     public GameObject keyRight;
     public GameObject docSpawner;
+    public GameObject textRemains;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-            StartCoroutine("PressLeft");
-            
-            Count--;
+        if (count <= 0) {
+            textRemains.GetComponent<RemainText>().GameClear();
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+
+        if (Input.GetMouseButtonDown(0)) {
+            lastKey = false;
+            count--;
+
+            StartCoroutine("PressLeft");
+        }
+        else if (Input.GetMouseButtonDown(1)) {
+            lastKey = true;
+            count--;
+
             StartCoroutine("PressRight");
-            
-            Count--;
         }
     }
 
     private IEnumerator PressLeft() {
         docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
-        docSpawner.GetComponent<DocumentSpawner>().MoveDocs();
         
         keyLeft.GetComponent<SpriteRenderer>().color = Color.black;
         yield return new WaitForSeconds(0.1f);
@@ -35,7 +42,6 @@ public class Player : MonoBehaviour
 
     private IEnumerator PressRight() {
         docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
-        docSpawner.GetComponent<DocumentSpawner>().MoveDocs();
 
         keyRight.GetComponent<SpriteRenderer>().color = Color.black;
         yield return new WaitForSeconds(0.1f);
