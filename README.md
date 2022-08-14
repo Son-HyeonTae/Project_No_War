@@ -4,7 +4,10 @@ MEGA's first project
 
 2022-07-01 ~
 
-| First Header | Second Header | First Header |
+|    Stage     |   Developer   | Illustrator  |
 | ------------ | ------------- | ------------ |
-| Content Cell | Content Cell  |
-| Content Cell | Content Cell  |
+|   Stage 01   | Eui-hyun Lee  |     TBD      |
+|   Stage 02   | Hyeon-tae Son |  Yu-na Jin   |
+|   Stage 03   | Hyeon-tae Son |  Yu-na Jin   |
+|   Stage 04   | Eui-hyun Lee  | Ho-jun Jang  |
+|   Stage 05   |  Hye-rin Ham  |  Kwon Saem   |
