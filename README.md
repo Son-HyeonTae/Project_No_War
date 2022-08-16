@@ -1,6 +1,6 @@
 # Project_No_War
 
-MEGA's first project
+MEGA's 1st project
 
 2022-07-01 ~ 2022-08-31
 
