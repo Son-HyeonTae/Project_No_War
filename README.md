@@ -6,7 +6,7 @@
 
 |    Stage     |   Developer   | Illustrator  |
 | ------------ | ------------- | ------------ |
-|   Stage 01   | Eui-hyun Lee  |     TBD      |
+|   Stage 01   | Hyeon-tae Son |     TBD      |
 |   Stage 02   | Hyeon-tae Son |  Yu-na Jin   |
 |   Stage 03   | Hyeon-tae Son |  Yu-na Jin   |
 |   Stage 04   | Eui-hyun Lee  | Ho-jun Jang  |
