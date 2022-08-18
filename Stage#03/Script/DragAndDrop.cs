@@ -21,12 +21,27 @@ public class DragAndDrop : MonoBehaviour {
                     SelectedPiece.GetComponent<SortingGroup>().sortingOrder = OrderInLayer;
                     OrderInLayer++;
                 }
+
+            }
+
+            if (hit.transform.CompareTag("BackPuzzle")) {
+                if (!hit.transform.GetComponent<BackPieceControl>().InRightPosition) {
+                    SelectedPiece = hit.transform.gameObject;
+                    SelectedPiece.GetComponent<BackPieceControl>().Selected = true;
+                    SelectedPiece.GetComponent<SortingGroup>().sortingOrder = OrderInLayer;
+                    OrderInLayer++;
+                }
             }
         }
 
         if (Input.GetMouseButtonUp(0)) {
-            if (SelectedPiece != null) {
+            if (SelectedPiece != null && SelectedPiece.transform.CompareTag("Puzzle")) {
                 SelectedPiece.GetComponent<PieceControl>().Selected = false;
+                SelectedPiece = null;
+            }
+
+            if (SelectedPiece != null && SelectedPiece.transform.CompareTag("BackPuzzle")) {
+                SelectedPiece.GetComponent<BackPieceControl>().Selected = false;
                 SelectedPiece = null;
             }
         }
@@ -37,15 +52,14 @@ public class DragAndDrop : MonoBehaviour {
         }
 
         if (Input.GetAxis("Mouse ScrollWheel") != 0) {
-            for (int i=0; i < Puzzles.Length; i++) {
-                Color color = Puzzles[i].GetComponent<SpriteRenderer>().color;
-                if (color.a == 0) {
-                    color.a = 255f;
-                    Puzzles[i].GetComponent<SpriteRenderer>().color = color;
+            for (int i = 0; i < Puzzles.Length; i++) {
+                if (Puzzles[i].activeSelf == true) {
+                    Puzzles[i].SetActive(false);
+                    Puzzles[i].GetComponent<PieceControl>().BackPiece.SetActive(true);
                 }
                 else {
-                    color.a = 0f;
-                    Puzzles[i].GetComponent<SpriteRenderer>().color = color;
+                    Puzzles[i].SetActive(true);
+                    Puzzles[i].GetComponent<PieceControl>().BackPiece.SetActive(false);
                 }
             }
         }
