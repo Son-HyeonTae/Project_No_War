@@ -5,21 +5,25 @@ using UnityEngine.SceneManagement;
 public class TimeLimit : MonoBehaviour
 {
     [SerializeField]
-    private float maxTime = 100;
+    private PlayerController playerController;
     [SerializeField]
     private string nextSceneName;
     [SerializeField]
-    private PlayerController playerController;
-    private float currentTime;
+    private float  timeDamage   = 5.0f;
+    [SerializeField]
+    private float  timeIncrease = 3.0f;
+    
     private SpriteRenderer spriteRenderer;
-
-    public float MaxTime => maxTime;
-    public float CurrentTime => currentTime;
+    
+    [SerializeField]
+    private float  maxTime      = 100f;
+    public  float  MaxTime      => maxTime;
+    private float  currentTime;
+    public  float  CurrentTime  => currentTime;
 
     private void Awake() {
         currentTime = maxTime;
         spriteRenderer = GetComponent<SpriteRenderer>();
-
     }
 
     private void Update() {
@@ -31,23 +35,22 @@ public class TimeLimit : MonoBehaviour
         else if (playerController.count >= 30) currentTime -= 19f * Time.deltaTime;
         else if (playerController.count >= 20) currentTime -= 20f * Time.deltaTime;
         else if (playerController.count >= 10) currentTime -= 21f * Time.deltaTime;
-        else if (playerController.count >= 0)  currentTime -= 21f * Time.deltaTime;
+        else if (playerController.count >=  0) currentTime -= 21f * Time.deltaTime;
 
         if (currentTime <= 0) {
             SceneManager.LoadScene(nextSceneName);
-            Debug.Log("GameOver - Timeover");
         }
     }
 
-    public void ReduceTime(float timeDamage) {
+    public void ReduceTime() {
         currentTime -= timeDamage;
     }
 
-    public void IncreaseTime(float timeIncrease) {
+    public void IncreaseTime() {
         currentTime += timeIncrease;
 
-        if (currentTime > maxTime) {
-            currentTime = maxTime;
+        if (currentTime >= maxTime) {
+            currentTime  = maxTime;
         }
     }
 }

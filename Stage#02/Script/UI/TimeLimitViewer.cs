@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class TimeLimitViewer : MonoBehaviour
 {
-    public TimeLimit timeLimit;
-    private Slider sliderTimeLimit;
+    public  TimeLimit timeLimit;
+    private Slider    sliderTimeLimit;
 
     private void Awake() {
         sliderTimeLimit = GetComponent<Slider>();

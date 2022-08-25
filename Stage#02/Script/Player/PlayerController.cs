@@ -4,8 +4,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    public int count = 50;
-    public bool lastKey = false;
+    public int  count = 80;
+    public bool isRed = false;
 
     public GameObject docSpawner;
     public GameObject textRemains;
@@ -17,28 +17,14 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0)) {
-            lastKey = false;
+            isRed = false;
             count--;
-
-            StartCoroutine("PressLeft");
+            docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
         }
         else if (Input.GetMouseButtonDown(1)) {
-            lastKey = true;
+            isRed = true;
             count--;
-
-            StartCoroutine("PressRight");
+            docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
         }
-    }
-
-    private IEnumerator PressLeft() {
-        docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
-        
-        yield return new WaitForSeconds(0.1f);
-    }
-
-    private IEnumerator PressRight() {
-        docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
-
-        yield return new WaitForSeconds(0.1f);
     }
 }

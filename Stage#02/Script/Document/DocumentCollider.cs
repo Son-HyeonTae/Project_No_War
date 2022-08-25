@@ -4,33 +4,24 @@ using UnityEngine;
 public class DocumentCollider : MonoBehaviour
 {
     [SerializeField]
-    private float timeDamage = 5.0f;
-    [SerializeField]
-    private float timeIncrease = 3.0f;
-    [SerializeField]
-    private GameObject player;
+    private GameObject       player;
     [SerializeField]
     private PlayerController playerController;
     
-    private IEnumerator OnTriggerEnter2D(Collider2D collision) {
-        if ((collision.gameObject.CompareTag("DocumentBlue"))
-            && (playerController.lastKey == false)) {
-                collision.gameObject.GetComponent<DocumentMovement>().clearBlue();
-                player.GetComponent<TimeLimit>().IncreaseTime(timeIncrease);
-                Debug.Log("True - Blue");
-            }
-        else if ((collision.gameObject.CompareTag("DocumentRed"))
-            && (playerController.lastKey == true)) {
-                collision.gameObject.GetComponent<DocumentMovement>().clearRed();
-                player.GetComponent<TimeLimit>().IncreaseTime(timeIncrease);
-                Debug.Log("True - Red");
+    private IEnumerator OnTriggerExit2D(Collider2D collision) {
+        // Correct
+        if (((collision.gameObject.CompareTag("DocumentBlue")) && (playerController.isRed == false))
+         || ((collision.gameObject.CompareTag("DocumentRed" )) && (playerController.isRed == true ))) {
+            player.GetComponent<TimeLimit>().IncreaseTime();
+            Debug.Log("Correct");
         }
+        // Incorrect
         else {
-            player.GetComponent<TimeLimit>().ReduceTime(timeDamage);
-            Debug.Log("False\nTime -5");
+            player.GetComponent<TimeLimit>().ReduceTime();
+            Debug.Log("Incorrect");
         }
         
-        yield return new WaitForSeconds(0.1f);
         Destroy(collision.gameObject);
+        yield return new WaitForSeconds(0.1f);
     }
 }
