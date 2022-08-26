@@ -4,11 +4,14 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
+    private GameObject stampAnimation;
+    public  GameObject docSpawner;
+    public  GameObject textRemains;
+    private Animator   animator;
+
+    [SerializeField]
     public int  count = 80;
     public bool isRed = false;
-
-    public GameObject docSpawner;
-    public GameObject textRemains;
 
     void Update()
     {
@@ -17,14 +20,16 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0)) {
+            Instantiate(stampAnimation, new Vector3(0, 0, 0), Quaternion.identity);
             isRed = false;
             count--;
             docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
         }
         else if (Input.GetMouseButtonDown(1)) {
+            Instantiate(stampAnimation, new Vector3(0, 0, 0), Quaternion.identity);
             isRed = true;
             count--;
-            docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
+            docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();    
         }
     }
 }

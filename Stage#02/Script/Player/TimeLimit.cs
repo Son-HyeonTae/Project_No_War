@@ -27,15 +27,15 @@ public class TimeLimit : MonoBehaviour
     }
 
     private void Update() {
-        if      (playerController.count >= 80) currentTime -= 12f * Time.deltaTime;
+        if      (playerController.count >= 80) currentTime -= 10f * Time.deltaTime;
         else if (playerController.count >= 70) currentTime -= 14f * Time.deltaTime;
-        else if (playerController.count >= 60) currentTime -= 16f * Time.deltaTime;
-        else if (playerController.count >= 50) currentTime -= 17f * Time.deltaTime;
-        else if (playerController.count >= 40) currentTime -= 18f * Time.deltaTime;
-        else if (playerController.count >= 30) currentTime -= 19f * Time.deltaTime;
-        else if (playerController.count >= 20) currentTime -= 20f * Time.deltaTime;
-        else if (playerController.count >= 10) currentTime -= 21f * Time.deltaTime;
-        else if (playerController.count >=  0) currentTime -= 21f * Time.deltaTime;
+        else if (playerController.count >= 60) currentTime -= 18f * Time.deltaTime;
+        else if (playerController.count >= 50) currentTime -= 20f * Time.deltaTime;
+        else if (playerController.count >= 40) currentTime -= 22f * Time.deltaTime;
+        else if (playerController.count >= 30) currentTime -= 24f * Time.deltaTime;
+        else if (playerController.count >= 20) currentTime -= 26f * Time.deltaTime;
+        else if (playerController.count >= 10) currentTime -= 28f * Time.deltaTime;
+        else if (playerController.count >=  0) currentTime -= 29f * Time.deltaTime;
 
         if (currentTime <= 0) {
             SceneManager.LoadScene(nextSceneName);
