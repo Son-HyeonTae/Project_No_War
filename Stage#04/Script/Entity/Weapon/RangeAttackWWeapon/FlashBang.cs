@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class FlashBang : RangeAttackWeaponType
 {
-    [SerializeField] private float FaintTime;
+    [SerializeField] private DBPFaint faint;
 
     public override void Awake()
     {
+        HitRange        = new Vector3(1, 1);
+        Angle           = 0;
+        ExplosionDelay  = 0;
+        Damage          = 20;
+        ReuseTime       = 5;
         base.Awake();
-        Damage = 1;
-        ReuseTime = 5;
-        Amount = 99999;
-        bImmediateStart = false;
+
+
+        ActionType = eRangeActionType.POINT;
     }
 
     public override void Execute(Vector3 Coordinate)
@@ -23,9 +27,7 @@ public class FlashBang : RangeAttackWeaponType
 
     private void Boomb(Entity entity)
     {
-        
+        entity.TakeHit(Damage, eEntityHitType.FAINT);
         entity.HitAction();
     }
 }
-
-////////Enemy Statement ÇÊ¿ä

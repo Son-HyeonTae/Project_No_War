@@ -15,7 +15,7 @@ public class Mob : Entity
         base.Awake();
     }
 
-    public void Start()
+    public virtual void Start()
     {
         var ui = Instantiate(HpUIObject);
         ui.Attachment(this, new Vector3(0, -.2f), data);

@@ -3,22 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+
 public class Gun : MonoBehaviour
 {
-    private ObjectPoolRegisterData ProjectileRegisterData;
+    private ObjectPoolRegisterData<Projectile> ProjectileRegisterData;
     [SerializeField] private Transform GunHead;
-    [SerializeField] private GameObject projectile;
+    [SerializeField] private Projectile projectile;
     [SerializeField] private float FireDelay;
     private bool bEndDelay;
 
     private void Awake()
     {
         bEndDelay = true;
-        ProjectileRegisterData = new ObjectPoolRegisterData();
-        ProjectileRegisterData.Prefab = projectile;
-        ProjectileRegisterData.Key = projectile.name;
-        ProjectileRegisterData.Capacity = 10;
-        ObjectPoolManager.Instance.Register(ProjectileRegisterData);
+        ProjectileRegisterData              = new ObjectPoolRegisterData<Projectile>();
+        ProjectileRegisterData.ID           = "ProjectilePool";
+        ProjectileRegisterData.Prefab       = projectile;
+        ProjectileRegisterData.Key          = projectile.name;
+        ProjectileRegisterData.Capacity     = 10;
+        ProjectileRegisterData.MaxCapacity  = 20;
+
+        ObjectPoolStorage.Instance.Pool_Projectile.Register(ProjectileRegisterData); 
     }
 
     private void Update()
@@ -33,7 +37,7 @@ public class Gun : MonoBehaviour
 
     private void GetProjectile()
     {
-        ObjectPoolManager.Instance.Spawn(ProjectileRegisterData, GunHead.position, GunHead.rotation);
+        ObjectPoolStorage.Instance.Pool_Projectile.Spawn(GunHead.position, GunHead.rotation);
     }
 
     private void ChangeDelayFlag()

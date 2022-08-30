@@ -42,7 +42,6 @@ public class ObjectHpUI : MonoBehaviour
             Vector3 ConvPos = MainCamera.WorldToScreenPoint(AttachmentObject.transform.position + AttachOffset);
             MyRT.position = ConvPos;
 
-
             if (HPUIData != data.HP.Value && data)
             {
                 StartCoroutine(CalculateHp());

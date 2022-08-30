@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] float Damage;
-    [SerializeField] float Velocity;
-    [SerializeField] float HitDist;
-    private ObjectPoolRegisterData PoolData;
+    [SerializeField] private float Damage;
+    [SerializeField] private float Velocity;
+    [SerializeField] private float HitDist;
+    private Projectile Self;
+    private ObjectPoolRegisterData<Projectile> PoolData;
 
     private void Awake()
     {
-        PoolData = new ObjectPoolRegisterData();
+        PoolData    = new ObjectPoolRegisterData<Projectile>();
+        Self        = GetComponent<Projectile>();  
     }
 
     // Update is called once per frame
@@ -29,22 +31,19 @@ public class Projectile : MonoBehaviour
             if(hit.transform.TryGetComponent<Entity>(out var entity))
             {
                 if(entity)
-                    entity.TakeHit(Damage);
-                StartCoroutine(RequestDespawn());
+                    entity.TakeHit(Damage, eEntityHitType.STIFF);
+                RequestDespawn();
             }
             if (hit.transform.CompareTag("Block"))
             {
-                StartCoroutine(RequestDespawn());
+                RequestDespawn();
             }
 
         }
     }
 
-    IEnumerator RequestDespawn()
+    private void RequestDespawn()
     {
-        PoolData.Prefab = gameObject;
-        PoolData.Key = name;
-        ObjectPoolManager.Instance.Despawn(PoolData);
-        yield return null;
+        ObjectPoolStorage.Instance.Pool_Projectile.Despawn(this);
     }
 }

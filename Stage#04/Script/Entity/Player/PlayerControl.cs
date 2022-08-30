@@ -2,57 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum eMOVE_TYPE
-{
-    FIXED,
-    MOVEMENT
-}
-
+/**
+* 유저가 플레이 하게 될 Player의 기능구현 cs
+* 마우스 방향, 위치로 총신을 회전시키는 기능
+* 
+* @최종 수정자 - 살메
+* @최종 수정일 - 2022-08-25::15:14
+*/
 public class PlayerControl : MonoBehaviour
 {
-    [SerializeField] private Camera MainCamera;
 
-    private Vector2 Target, Mouse;
+    private Vector3 LocationSelf;
+    private Vector3 MousePosition;
     private float Angle;
 
-//--
-    [SerializeField] private eMOVE_TYPE MoveType;
+
+    /**
+    * 총신 회전에 필요한 방향을 구하기 위해 Unity의 MainCamera의 위치정보를 이용
+    */
+    private Camera MainCamera;
 
 
-    // Update is called once per frame
-    void Update()
+
+    private void Awake()
     {
-        //Debug.Log(GetMouseHorizontalAxis());
-        
-        switch(MoveType)
-        {
-            case eMOVE_TYPE.FIXED:
-                MoveTypeFixed();
-                break;
-            case eMOVE_TYPE.MOVEMENT:
-                MoveTypeMovement();
-                break;
-        }
-
+        MainCamera = Camera.main;
+    }
+    private void Update()
+    {
+        GetAxisAngle();
     }
 
 
-
-
-    void MoveTypeFixed()
+    /**
+    * 플레이어 총신 회전 구현부
+    * 
+    * @param 
+    * @return null
+    * @exception 
+    */
+    private void GetAxisAngle()
     {
-        Target = transform.position;
+        LocationSelf = transform.position;
 
-        Mouse = MainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Angle = Mathf.Atan2(Mouse.y - Target.y, Mouse.x - Target.x) * Mathf.Rad2Deg;
-        
+        MousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Angle = Mathf.Atan2(MousePosition.y - LocationSelf.y, MousePosition.x - LocationSelf.x) * Mathf.Rad2Deg;
+
         transform.rotation = Quaternion.AngleAxis(Angle - 90, Vector3.forward);
-    }
-    void MoveTypeMovement()
-    {
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-        float MousePositionX = MainCamera.ScreenToWorldPoint(Input.mousePosition).x;
-
-        transform.position = new Vector3(MousePositionX, transform.position.y);
     }
 }

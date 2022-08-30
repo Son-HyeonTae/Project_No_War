@@ -2,14 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyGenerateRequest : MonoBehaviour
+/**
+* Enemy를 규칙에 따라 생성하기 위해 작성된 클래스임
+* 파일 입출력을 통해 생성 데이터를 관리
+* 
+* @최종 수정자 - 살메
+* @최종 수정일 - 2022-08-25::15:14
+*/
+public class EnemyGenerateRequest : Singleton<EnemyGenerateRequest>
 {
-    private string ABSOLUTE_PATH; //Generate Sequence file path
+    private string ABSOLUTE_PATH;                           //Generate Sequence file path
 
     private float ElapsedTime;
-    public float GenerateTime;
-    public GameObject EnemyObject;
-    private ObjectPoolRegisterData Data;
+    public  float GenerateTime;
+    public  int Capacity;
+    public  int MaxCapacity;
+    private ObjectPoolRegisterData<Enemy> RegisterData;
+
+    public Enemy EnemyObject;
 
     private void Awake()
     {
@@ -17,21 +27,17 @@ public class EnemyGenerateRequest : MonoBehaviour
 
         ElapsedTime = 0;
 
-        Data = new ObjectPoolRegisterData();
-        Data.Prefab = EnemyObject;
-        Data.Key = EnemyObject.name;
-        Data.Capacity = 2;
-        Data.ExpensionAmount = 1;
+        RegisterData                        = new ObjectPoolRegisterData<Enemy>();
+        RegisterData.ID                     = "EnemyPool";
+        RegisterData.Prefab                 = EnemyObject;
+        RegisterData.Key                    = EnemyObject.name;
+        RegisterData.Capacity               = Capacity;
+        RegisterData.MaxCapacity            = MaxCapacity;
+
+        ObjectPoolStorage.Instance.Pool_Enemy.Register(RegisterData);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        ObjectPoolManager.Instance.Register(Data);
-    }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         ElapsedTime += Time.deltaTime;
 
@@ -46,7 +52,7 @@ public class EnemyGenerateRequest : MonoBehaviour
 
     IEnumerator GenerateEnemy(Vector3 location)
     {
-        ObjectPoolManager.Instance.Spawn(Data, location, Quaternion.identity);
+        ObjectPoolStorage.Instance.Pool_Enemy.Spawn(location, Quaternion.identity);
         yield return null;
     }
 }
