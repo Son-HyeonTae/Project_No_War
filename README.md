@@ -2,7 +2,7 @@
 
 1st project of MEGA!
 
-2022-07-01 ~ 2022-08-31
+2022-07-01 ~ 2022-09
 
 |    Stage     |   Developer   | Illustrator  |
 | ------------ | ------------- | ------------ |
@@ -11,3 +11,6 @@
 |   Stage 03   | Hyeon-tae Son |  Kwon Saem   |
 |   Stage 04   | Eui-hyun Lee  | Ho-jun Jang  |
 |   Stage 05   |  Hye-rin Ham  |  Kwon Saem   |
+
+
+..
