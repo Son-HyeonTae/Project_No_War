@@ -4,36 +4,49 @@ using UnityEngine;
 
 public class HidableObject : MonoBehaviour
 {
-    private Collider2D Collider;
-    [SerializeField] private Vector3 HitRange;
     [SerializeField] private Vector3 Offset;
     [SerializeField] private bool bDisplayGizmos;
 
     public bool bUse { get; private set; }
+    public Vector3 HidableObjectPosition { get; private set; }
+    public Entity EnemyInUse { get; private set; }
 
-    private void Awake()
+    private void Start()
     {
-        Collider = GetComponent<Collider2D>();
+        HidableObjectPosition = transform.position + Offset;
     }
 
-    private void Update()
+    /**
+    * 엄폐물을 사용중인 Entity의 정보를 보관하고 상태를 '사용중'으로 전환
+    * 
+    * 
+    * @param (Entity) enemy 현재 엄폐물을 사용중인 Entity의 정보
+    * @return NULL
+    * @exception 
+    */
+    public void InUse(Entity enemy)
     {
-        Collider2D[] Hit = Physics2D.OverlapBoxAll(transform.position, HitRange, 0);
-        if(Hit != null && Hit[0].CompareTag("Enemy"))
-        {
-            bUse = true;
-        }
-        else
-        {
-            bUse = false;
-        }
+        bUse = true;
+        EnemyInUse = enemy;
+    }
+    /**
+    * Entity정보를 폐기 및 상태를 "미사용"으로 전환
+    * 
+    * @return NULL
+    * @exception 
+    */
+    public bool UseOut()
+    {
+        bUse = false;
+        EnemyInUse = null;
+        return true;
     }
 
     private void OnDrawGizmos()
     {
         if(bDisplayGizmos)
         {
-            Gizmos.DrawWireCube(transform.position + Offset, HitRange);
+            Gizmos.DrawSphere(transform.position + Offset, 0.1f);
         }
     }
 }

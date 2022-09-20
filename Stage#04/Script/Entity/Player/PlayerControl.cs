@@ -30,6 +30,12 @@ public class PlayerControl : MonoBehaviour
     }
     private void Update()
     {
+        if (!GameManager.Instance.bLoadedScene)
+        {
+            Debug.Log("Don't Load Scene");
+            return;
+        }
+
         GetAxisAngle();
     }
 
@@ -46,8 +52,9 @@ public class PlayerControl : MonoBehaviour
         LocationSelf = transform.position;
 
         MousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Angle = Mathf.Atan2(MousePosition.y - LocationSelf.y, MousePosition.x - LocationSelf.x) * Mathf.Rad2Deg;
+        Angle = (Mathf.Atan2(MousePosition.y - LocationSelf.y, MousePosition.x - LocationSelf.x) * Mathf.Rad2Deg) - 90;
+        float FixedAngle = Mathf.Clamp(Angle, -45, 44);
 
-        transform.rotation = Quaternion.AngleAxis(Angle - 90, Vector3.forward);
+        transform.rotation = Quaternion.AngleAxis(FixedAngle, Vector3.forward);
     }
 }

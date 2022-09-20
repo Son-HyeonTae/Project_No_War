@@ -71,4 +71,9 @@ public class PathRequestManager : Singleton<PathRequestManager>
         bProcessingPath = false;
         TryProcessNext();
     }
+
+    public void StopPathFindingRequest()
+    {
+        pathFinding.StopFindPath();
+    }
 }

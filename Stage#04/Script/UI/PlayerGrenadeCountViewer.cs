@@ -15,6 +15,11 @@ public class PlayerGrenadeCountViewer : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.bLoadedScene)
+        {
+            Debug.Log("Don't Load Scene");
+            return;
+        }
         textMineCount.text = WeaponManager.Instance.GetWeaponInDict(TargetWeaponPrefab.name).data.Amount.Value.ToString();
     }
 }

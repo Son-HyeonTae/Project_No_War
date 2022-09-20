@@ -30,7 +30,6 @@ public class RangeAttackWeaponType : Weapon
     [SerializeField] protected float Damage;
 
 
-
     ///===================================================
     ///            RangeAttack Variables
     ///===================================================
@@ -82,10 +81,11 @@ public class RangeAttackWeaponType : Weapon
 
     public override void Execute(Vector3 Coordinate)
     {
+        base.Execute(Coordinate);
         TargetPos = Coordinate;
     }
 
-    public void RangeAttack(Action<Entity> action)
+    public void RangeAttack(Action<Entity> action, Action effect)
     {
         switch(ActionType)
         {
@@ -98,7 +98,7 @@ public class RangeAttackWeaponType : Weapon
             default:
                 break;
         }
-        if (CurrentType) CurrentType.OnEnter(action);
+        if (CurrentType) CurrentType.OnEnter(action, effect);
     }
 
 
@@ -123,7 +123,8 @@ public class RangeAttackWeaponType : Weapon
 */
 public class RangeAttackType : MonoBehaviour
 {
-    protected Action<Entity>            ActionExecute;
+    protected Action                    HitEffect;
+    protected Action<Entity>            HitAction;
     protected Collider2D[]              TagObjects;
     protected BoxCollider2D             Collider;
     protected RangeAttackWeaponType     Parent;
@@ -136,7 +137,11 @@ public class RangeAttackType : MonoBehaviour
     }
 
     ///처음 한 번만 실행
-    public virtual void OnEnter(Action<Entity> action) { ActionExecute = action; }
+    public virtual void OnEnter(Action<Entity> action, Action effect) 
+    {
+        HitAction = action;
+        HitEffect = effect;
+    }
     /// 주기적으로 실행
     public virtual void OnUpdate() { }
 
@@ -149,8 +154,10 @@ public class RangeAttackType : MonoBehaviour
     * @exception 
     */
     /* 구현 방법이 올바른지 모르겠음 */
-    public IEnumerator OnActiveAction(Action<Entity> action)
+    public IEnumerator OnActiveAction(Action<Entity> action, Action effect)
     {
+        effect();
+
         Collider.enabled = true;
         TagObjects = Physics2D.OverlapBoxAll(transform.position, Parent.HitRange, Parent.Angle);
 
@@ -163,6 +170,7 @@ public class RangeAttackType : MonoBehaviour
                 action(entity);
             }
         }
+
         yield return null;
         Destroy(gameObject);
     }
@@ -179,18 +187,18 @@ public class RangeAttackType : MonoBehaviour
 public class RangeAttack_TYPE_TIMER : RangeAttackType
 {
 
-    public override void OnEnter(Action<Entity> action)
+    public override void OnEnter(Action<Entity> action, Action effect)
     {
-        base.OnEnter(action);
-        StartCoroutine(RangeAttack_TIMER_Cor(action));
+        base.OnEnter(action, effect);
+        StartCoroutine(RangeAttack_TIMER_Cor(action, effect));
     }
 
 
-    public IEnumerator RangeAttack_TIMER_Cor(Action<Entity> action)
+    public IEnumerator RangeAttack_TIMER_Cor(Action<Entity> action, Action effect)
     {
         Parent.transform.position = Parent.TargetPos;
         yield return new WaitForSeconds(Parent.ExplosionDelay);
-        StartCoroutine(OnActiveAction(action));
+        StartCoroutine(OnActiveAction(action, effect));
     }
 }
 
@@ -218,9 +226,9 @@ public class RangeAttack_TYPE_POINT : RangeAttackType
         Preview = gameObject.AddComponent<ShowWeaponPreview>();
     }
 
-    public override void OnEnter(Action<Entity> action)
+    public override void OnEnter(Action<Entity> action, Action effect)
     {
-        base.OnEnter(action);
+        base.OnEnter(action, effect);
         bOnActiveActionCall = false;
         Parent.transform.position = Stage4PlayerComponent.transform.position;
         PlayerToTargetDir = (Parent.TargetPos - Parent.transform.position).normalized;
@@ -239,7 +247,7 @@ public class RangeAttack_TYPE_POINT : RangeAttackType
         {
             bOnActiveActionCall = true;
             Preview.EndWeaponPreview();
-            StartCoroutine(OnActiveAction(ActionExecute));
+            StartCoroutine(OnActiveAction(HitAction, HitEffect));
         }
     }
 }

@@ -11,16 +11,8 @@ public class Enemy : Mob
 
     private void OnEnable()
     {
-        StateMachine.Change(StateMachine.MoveState);
+        StateMachine.Initialize(StateMachine.MoveState);
         Init();
-    }
-
-    private void OnDrawGizmos()
-    {
-        if(bDisplayGizmos)
-        {
-            Gizmos.DrawWireCube(transform.position, Vector3.one * 2);
-        }
     }
 
     public override void RequestDespawn()

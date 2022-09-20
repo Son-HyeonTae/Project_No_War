@@ -66,8 +66,8 @@ public class StateMachine : MonoBehaviour
     {
         if (CurrentState != null && CurrentState.bCanChange && state.bCanChange)
         {
-            if (CurrentState == state)
-                return false;
+            /*if (CurrentState == state)
+                return false;*/
 
             CurrentState.OnExit();
             PreviousState = CurrentState;
@@ -77,15 +77,18 @@ public class StateMachine : MonoBehaviour
             Debug.Log("Changed " + PreviousState + " -> " + CurrentState);
             return true;
         }
-        else
-        {
-            Initialize(state);
-        }
+
         return false;
     }
 
     private void Update()
     {
+        if (!GameManager.Instance.bLoadedScene)
+        {
+            Debug.Log("Don't Load Scene");
+            return;
+        }
+
         //Debug.Log(CurrentState);
         if (CurrentState != null)
         {
@@ -181,7 +184,7 @@ public class Statement_Faint : Statement
 }
 
 /**
-* Enemy의 기절 상태 구현
+* Enemy의 경직 상태 구현
 * 경직 상태보다 지속시간이 긺
 * 
 * @최종 수정자 - 살메
@@ -193,12 +196,10 @@ public class Statement_Stiff : Statement
     public Vector3 HitDir { get; set; }
 
     private float ElapsedTime;
-    private static bool bStiffEnd;
 
 
-    private void Awake()
+    private void OnEnable()
     {
-        bStiffEnd = true;
         Duration = 0.0f;
         HitDir = Vector3.zero;
         ElapsedTime = 0.0f;
@@ -207,30 +208,26 @@ public class Statement_Stiff : Statement
     public override void OnEnter()
     {
         base.OnEnter();
-        if (!bStiffEnd)
-            return;
+        /*if (!bStiffEnd)
+            return;*/
 
         Parent.AnimController.SwitchAnimation("Stiff");
 
-        if (Duration == 0.0f) Duration = 0.3f;
-        if (HitDir == Vector3.zero) HitDir = transform.up;
+        Duration = 0.5f;
 
         ElapsedTime = 0.0f;
-        bCanChange = false;
-        bStiffEnd = true;
-    }
+/*        bCanChange = false;
+*/    }
 
     public override void Condition()
     {
         base.Condition();
-        bStiffEnd = false;
 
         ElapsedTime += Time.deltaTime;
         if (ElapsedTime >= Duration)
         {
-            bCanChange = true;
-            bStiffEnd = true;
-            Parent.AnimController.SwitchAnimation("Walk");
+/*            bCanChange = true;
+*/            Parent.AnimController.SwitchAnimation("Walk");
             Machine.Change(Machine.MoveState);
         }
     }
@@ -238,7 +235,7 @@ public class Statement_Stiff : Statement
 }
 
 /**
-* Enemy의 경직 상태 구현
+* Enemy의 기본 상태 구현
 * 기절보다 지속시간이 짧음
 * 
 * @최종 수정자 - 살메
@@ -253,7 +250,7 @@ public class Statement_IDLE : Statement
 }
 
 /**
-* Enemy의 기본 상태 구현
+* Enemy의 이동 상태 구현
 * 
 * @최종 수정자 - 살메
 * @최종 수정일 - 2022-08-25::15:14
@@ -262,7 +259,10 @@ public class Statement_Move : Statement
 {
     private Vector3 BeginPoint;
     private Vector3 EndPoint;
-    private List<Collider2D> OldCol;
+
+
+    private List<HidableObject> OldCol;
+    private float HidableObjectDetectRange;
 
     private void OnDisable()
     {
@@ -271,7 +271,8 @@ public class Statement_Move : Statement
 
     private void Awake()
     {
-        OldCol = new List<Collider2D>();
+        OldCol = new List<HidableObject>();
+        HidableObjectDetectRange = 10.0f;
     }
 
     public override void OnEnter()
@@ -286,42 +287,33 @@ public class Statement_Move : Statement
 
     public override void Condition()
     {
+        Collider2D[] GetObject = Physics2D.OverlapBoxAll(transform.position, Vector3.one * HidableObjectDetectRange, 0);
 
-        var res = TryGetHidableObjectInRange();
-        //Debug.Log(Parent.PathFindSystem.bEndPathFinding);
-        if (Parent.PathFindSystem.bEndPathFinding)
+        ///Fath find end
+        /*if (Parent.PathFindSystem.bEndPathFinding)
         {
             Machine.Change(Machine.IDLEState);
-        }
-        else if (res)
-        {
-            Machine.HideState.HideBases = res;
-            Machine.Change(Machine.HideState);
-        }
-    }
-    public override void OnExit()
-    {
-        Parent.PathFindSystem.StopPathFinding();
-    }
+        }*/
 
-    private Collider2D TryGetHidableObjectInRange()
-    {
-        Collider2D[] GetObject = Physics2D.OverlapBoxAll(transform.position, Vector3.one * 2, 0);
-
+/*
+        ///State Hide transition
         if (GetObject.Length > 0)
         {
             foreach (Collider2D obj in GetObject)
             {
                 obj.TryGetComponent<HidableObject>(out var hidable);
-                if (hidable && !hidable.bUse && !OldCol.Contains(obj))
+                if (hidable && !hidable.bUse && !OldCol.Contains(hidable))
                 {
-                    OldCol.Add(obj);
-                    return obj;
+                    OldCol.Add(hidable);
+                    Machine.HideState.HideBases = hidable;
+                    Machine.Change(Machine.HideState);
                 }
             }
-        }
-
-        return null;
+        }*/
+    }
+    public override void OnExit()
+    {
+        Parent.PathFindSystem.StopPathFinding();
     }
 }
 
@@ -333,45 +325,28 @@ public class Statement_Move : Statement
 */
 public class Statement_Hide : Statement
 {
-    private const int InitialHideCount = 1;
-
-    public Collider2D HideBases;
-    private List<Collider2D> HidedColliders;
+    public HidableObject HideBases;
     private Vector3 BeginPoint, EndPoint;
-    private int HideCount;
 
-    private void OnDisable()
-    {
-        HidedColliders.Clear();
-    }
-
-    private void Awake()
-    {
-        HidedColliders = new List<Collider2D>();
-        HideCount = InitialHideCount;
-    }
 
     public override void OnEnter()
     {
         base.OnEnter();
-        Parent.AnimController.SwitchAnimation("Walk");
+        BeginPoint = transform.position;
+        EndPoint = HideBases.HidableObjectPosition;
 
-        if (HideCount > 0 && RandomValue.Instance.Random(80))
+        if (RandomValue.Instance.Random(100))
         {
-            HideCount--;
-            BeginPoint = transform.position;
-            EndPoint = HideBases.transform.position + new Vector3(0, HideBases.transform.localScale.y * 0.8f);
+
             Parent.PathFindSystem.StartPathFind(BeginPoint, EndPoint);
+            Parent.AnimController.SwitchAnimation("Walk");
+            HideBases.InUse(Parent);
         }
         else
         {
+            HideBases.UseOut();
             Machine.Change(Machine.MoveState);
         }
-    }
-
-    public override void OnExit()
-    {
-        HideCount = InitialHideCount;
     }
 
     public override void Execute()
@@ -385,14 +360,9 @@ public class Statement_Hide : Statement
     private IEnumerator WaitFor(float t)
     {
         yield return new WaitForSeconds(t);
-        HidedColliders.Add(HideBases);
+        //HideBases = null;
         bCanChange = true;
-        HideBases = null;
         Machine.Change(Machine.MoveState);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(EndPoint, new Vector3(1, 1));
-    }
 }

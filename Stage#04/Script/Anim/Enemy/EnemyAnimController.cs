@@ -56,8 +56,8 @@ public class EnemyAnimController : MonoBehaviour
         AnimationDataDict = new Dictionary<string, eAnimType>();
         AnimationDataDict.Add(IsWalk, eAnimType.BOOL);
         AnimationDataDict.Add(IsHide, eAnimType.BOOL);
-        AnimationDataDict.Add(IsFaintTR, eAnimType.TRIGGER);
-        AnimationDataDict.Add(IsStiffTR, eAnimType.TRIGGER);
+        AnimationDataDict.Add(IsFaintTR, eAnimType.BOOL);
+        AnimationDataDict.Add(IsStiffTR, eAnimType.BOOL);
 
         //StateMachineSelf = Self.StateMachine;
         CurrentAnimation    = InitialAnimation;
@@ -68,13 +68,15 @@ public class EnemyAnimController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         AnimationAutoFlip();
-    }
+    }*/
     /**
     * 애니메이션 좌우 반전 구현부
     * 플레이어의 이동 방향에 따라 결정
+    * 
+    * @not use
     * @param 
     * @return null
     * @exception 
@@ -109,7 +111,7 @@ public class EnemyAnimController : MonoBehaviour
 
             PreviousAnimation = CurrentAnimation;
             CurrentAnimation = Name;
-            Debug.Log("Switched " + PreviousAnimation + " -> " + CurrentAnimation);
+            //Debug.Log("Switched " + PreviousAnimation + " -> " + CurrentAnimation);
         }
 
         //Switch Current Animation Statement 

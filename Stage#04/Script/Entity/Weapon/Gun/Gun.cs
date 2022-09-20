@@ -3,14 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
+/**
+* 플레이어 무기 중, 총기 구현 클래스
+* 
+* @최종 수정자 - 살메
+* @최종 수정일 - 2022-08-30::15:48
+*/
 public class Gun : MonoBehaviour
 {
+    ///===================================================
+    ///      Object pool data Variables
+    ///===================================================
     private ObjectPoolRegisterData<Projectile> ProjectileRegisterData;
+
+
+    ///===================================================
+    ///      Fire function Variables
+    ///===================================================
     [SerializeField] private Transform GunHead;
     [SerializeField] private Projectile projectile;
     [SerializeField] private float FireDelay;
     private bool bEndDelay;
+
 
     private void Awake()
     {
@@ -27,7 +41,14 @@ public class Gun : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKey(KeyCode.Space) && bEndDelay)
+        if (!GameManager.Instance.bLoadedScene)
+        {
+            Debug.Log("Don't Load Scene");
+            return;
+        }
+
+
+        if (Input.GetKey(KeyCode.Space) && bEndDelay)
         {
             GetProjectile();
             bEndDelay = false;

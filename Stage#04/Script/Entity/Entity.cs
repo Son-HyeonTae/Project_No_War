@@ -72,7 +72,7 @@ public class Entity : MonoBehaviour, IDamgeable
 
 
     /**
-    * 자신에게 데미지를 부여하는 함수
+    * 자신에게 데미지 + 상태이상을 부여하는 함수
     * 적 스크립트에서 호출 
     * StateMachine을 통한 상태 전이도 함께 수행
     * 

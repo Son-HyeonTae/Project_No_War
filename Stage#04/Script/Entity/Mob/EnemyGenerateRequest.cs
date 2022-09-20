@@ -39,11 +39,17 @@ public class EnemyGenerateRequest : Singleton<EnemyGenerateRequest>
 
     private void Update()
     {
+        if (!GameManager.Instance.bLoadedScene)
+        {
+            Debug.Log("Don't Load Scene");
+            return;
+        }
+
         ElapsedTime += Time.deltaTime;
 
         if(ElapsedTime >= GenerateTime)
         {
-            Vector3 position = new Vector3(Random.Range(-3, 3), 5);
+            Vector3 position = new Vector3(Random.Range(-3, 3), 7);
             //int type = GenerateQueue.Dequeue();
             StartCoroutine(GenerateEnemy(position));
             ElapsedTime = 0;

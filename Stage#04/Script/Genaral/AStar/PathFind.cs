@@ -18,15 +18,16 @@ using System;
 /// </summary>
 
 
-///                       ¶£----<-5--<-----¶§
-///StartFindPath() 1-> FindPath() 2->> RetracePath() 3->> SimplifyPath() ->--¶§
-///                         |                     ¶¶-----<------<-----4---<---¶•
+///                       ‚îå----<-5--<-----‚îê
+///StartFindPath() 1-> FindPath() 2->> RetracePath() 3->> SimplifyPath() ->--‚îê
+///                         |                     ‚îî-----<------<-----4---<---‚îò
 ///                         V
 ///                         PathRequestManager.Instance.FinishedProcessingPath(waypoints, pathSuccess);
 
 public class PathFind : MonoBehaviour
 {
     Grid grid;
+    private Coroutine CurrentRunningCoroutine;
 
     private void Awake()
     {
@@ -35,7 +36,12 @@ public class PathFind : MonoBehaviour
 
     public void StartFindPath(Vector3 startPosition, Vector3 targetPosition)
     {
-        StartCoroutine(FindPath(startPosition, targetPosition));
+        CurrentRunningCoroutine = StartCoroutine(FindPath(startPosition, targetPosition));
+    }
+
+    public void StopFindPath()
+    {
+        StopCoroutine(CurrentRunningCoroutine);
     }
 
     IEnumerator FindPath(Vector3 StartPostion, Vector3 TargetPosition)

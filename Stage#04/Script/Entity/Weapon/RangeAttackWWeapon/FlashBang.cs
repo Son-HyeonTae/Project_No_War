@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class FlashBang : RangeAttackWeaponType
 {
-    [SerializeField] private DBPFaint faint;
+    private Image Flash;
 
     public override void Awake()
     {
@@ -16,18 +18,30 @@ public class FlashBang : RangeAttackWeaponType
         base.Awake();
 
 
-        ActionType = eRangeActionType.POINT;
+        Flash = GameObject.Find("FlashBangUI").GetComponent<Image>();
+        Flash.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
     }
 
     public override void Execute(Vector3 Coordinate)
     {
         base.Execute(Coordinate);
-        RangeAttack(Boomb);
+        RangeAttack(HitAction, HitEffect);
     }
 
-    private void Boomb(Entity entity)
+    private void HitAction(Entity entity)
     {
-        entity.TakeHit(Damage, eEntityHitType.FAINT);
+        entity.TakeHit(data.Damage.Value, eEntityHitType.FAINT);
         entity.HitAction();
+    }
+
+    private void HitEffect()
+    {
+        /*Flash.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+
+        StartCoroutine(GameManager.Instance.FadeOut(0.02f, 0.0f, Flash, ()
+            => {
+                StartCoroutine(GameManager.Instance.FadeIn(0.7f, 0.0f, Flash));
+            }));
+*/
     }
 }

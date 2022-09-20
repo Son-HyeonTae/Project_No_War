@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Grenade : RangeAttackWeaponType
 {
+    [SerializeField] GameObject hitEffect;
+
     public override void Awake()
     {
         HitRange        = new Vector3(1, 1);
@@ -13,20 +15,30 @@ public class Grenade : RangeAttackWeaponType
         ReuseTime       = 5;
         base.Awake();
 
-
-        ActionType = eRangeActionType.TIMER;
     }
 
     public override void Execute(Vector3 Coordinate)
     {
-
         base.Execute(Coordinate);
-        RangeAttack(Boomb);
+        RangeAttack(HitAction, HitEffect);
     }
 
-    private void Boomb(Entity entity)
+    private void HitAction(Entity entity)
     {
-        entity.TakeHit(data.Damage.Value, eEntityHitType.NORMAL);
+        entity.TakeHit(data.Damage.Value, eEntityHitType.STIFF);
         entity.HitAction();
+    }
+
+    private void HitEffect()
+    {
+        hitEffect = Instantiate(hitEffect);
+        hitEffect.transform.position = transform.position;
+        StartCoroutine(effectDestroy());
+    }
+
+    private IEnumerator effectDestroy()
+    {
+        Destroy(hitEffect, 0.7f);
+        yield return null;
     }
 }

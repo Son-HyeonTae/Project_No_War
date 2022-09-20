@@ -21,11 +21,15 @@ public class PathFindHelper : MonoBehaviour
     }
     public void StopPathFinding()
     {
-        bEndPathFinding = true;
         if (LastRoutine != null)
+        {
+            PathRequestManager.Instance.StopPathFindingRequest();
             StopCoroutine(LastRoutine);
+        }
         path = null;
         targetIndex = 0;
+
+        bEndPathFinding = true;
     }
 
     private void OnPathFound(Vector3[] Waypoints, bool pathSuccessful)

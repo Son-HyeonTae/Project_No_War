@@ -40,6 +40,14 @@ public class WeaponManager : Singleton<WeaponManager>
 
     private void Update()
     {
+        if (!GameManager.Instance.bLoadedScene)
+        {
+            Debug.Log("Don't Load Scene");
+            return;
+        }
+
+
+
         SetWeapon();
 
         /**
@@ -49,26 +57,34 @@ public class WeaponManager : Singleton<WeaponManager>
         */
         if (SelectedWeapon != null)
         {
-            if (CooltimeQueue.Instance.CheckObjectCooltimeIsOver(SelectedWeapon.gameObject))
+            if(SelectedWeapon.data.Amount.Value > 0)
             {
-                if (SelectedWeapon.data.bImmediateStart == false)
+                if (CooltimeQueue.Instance.CheckObjectCooltimeIsOver(SelectedWeapon.gameObject))
                 {
-                    Vector3 Loc = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                    UsePoint = WeaponPreview.StartWeaponPreview(SelectedWeapon.data.NoneImmediatePreviewSource, Loc);
-                }
+                    if (SelectedWeapon.data.bImmediateStart == false)
+                    {
+                        Vector3 Loc = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                        UsePoint = WeaponPreview.StartWeaponPreview(SelectedWeapon.data.NoneImmediatePreviewSource, Loc);
+                    }
 
-                if (Input.GetMouseButtonDown(0))
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        WeaponPreview.EndWeaponPreview();
+                        CooltimeQueue.Instance.Add(SelectedWeapon.gameObject, SelectedWeapon.data.Cooltime.Value);
+                        TryGetWeapon(SelectedWeapon);
+                        SelectedWeapon.data.Amount.Value--;
+                        Init();
+                    }
+                }
+                else
                 {
-                    WeaponPreview.EndWeaponPreview();
-                    CooltimeQueue.Instance.Add(SelectedWeapon.gameObject, SelectedWeapon.data.Cooltime.Value);
-                    TryGetWeapon(SelectedWeapon);
-                    SelectedWeapon.data.Amount.Value--;
-                    Init();
+                    SelectedWeapon = null;
                 }
             }
             else
             {
                 SelectedWeapon = null;
+                Debug.Log("모두 사용함.");
             }
         }
 

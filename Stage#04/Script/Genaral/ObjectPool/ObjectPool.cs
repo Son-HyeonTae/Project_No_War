@@ -162,4 +162,20 @@ public class ObjectPool<T> : MonoBehaviour where T : Behaviour
 
         return false;
     }
+
+
+    public void DestroyAllObject()
+    {
+        for(int i = 0; i < ObjectQueue.Count; i++)
+        {
+            Destroy(ObjectQueue.Dequeue());
+        }
+        ObjectQueue.Clear();
+        ObjectQueue = null;
+
+        ObjectData.Clear();
+        ObjectData = null;
+
+        PoolRegisterData = null;
+    }
 }

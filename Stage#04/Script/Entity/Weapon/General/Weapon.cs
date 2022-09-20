@@ -14,9 +14,9 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Scriptable Object Asset/WeaponData")]
 public class WeaponData : ScriptableObject
 {
-    public DATA<float> Damage = new DATA<float>();
+    public DATA<float> Damage   = new DATA<float>();
     public DATA<float> Cooltime = new DATA<float>();
-    public DATA<int> Amount = new DATA<int>();
+    public DATA<int> Amount     = new DATA<int>();
 
     public bool bImmediateStart;                                ///즉시 시전 플래그, 활성화 시, WeaponPreview를 수행하지 않음
     public GameObject NoneImmediatePreviewSource;               ///지점조작 WeaponPreview Sprite
@@ -34,9 +34,10 @@ public class WeaponData : ScriptableObject
 public class Weapon : MonoBehaviour 
 {
     [HideInInspector] public WeaponData data { get; protected set; }
+    [HideInInspector] public AudioClip audioClip { get; protected set; }
     [SerializeField] private GameObject NoneImmediatePreviewSource;
     [SerializeField] private GameObject NoneImmediateTargetSource;
-    
+
     public virtual void Init()
     {
         data = ScriptableObject.CreateInstance<WeaponData>();
@@ -46,7 +47,23 @@ public class Weapon : MonoBehaviour
         data.bImmediateStart = false;
         data.NoneImmediatePreviewSource = this.NoneImmediatePreviewSource;
         data.NoneImmediateTargetSource = this.NoneImmediateTargetSource;
+
+        audioClip = GetComponent<AudioClip>();
     }
-    public virtual void Execute(Vector3 coordinate) { }
-    public virtual void Execute() { }
+    public virtual void Execute(Vector3 coordinate) 
+    {
+        if (!GameManager.Instance.bLoadedScene)
+        {
+            Debug.Log("Don't Load Scene");
+            return;
+        }
+    }
+    public virtual void Execute()
+    {
+        if (!GameManager.Instance.bLoadedScene)
+        {
+            Debug.Log("Don't Load Scene");
+            return;
+        }
+    }
 }
