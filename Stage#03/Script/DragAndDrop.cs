@@ -1,10 +1,17 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class DragAndDrop : MonoBehaviour {
+    [SerializeField]
+    private GameObject   TablePuzzle;
     private GameObject[] Puzzles;
-    public GameObject SelectedPiece;
-    int OrderInLayer = 1;
+    public  GameObject   SelectedPiece;
+
+    private bool ScrollFlag;
+    private int  OrderInLayer = 1;
+    public  int  CorrectCount = 0;
 
     void Start() {
         Puzzles = GameObject.FindGameObjectsWithTag("Puzzle");
@@ -51,8 +58,23 @@ public class DragAndDrop : MonoBehaviour {
             SelectedPiece.transform.position = new Vector3(MousePoint.x, MousePoint.y, 0);
         }
 
-        if (Input.GetAxis("Mouse ScrollWheel") != 0) {
-            for (int i = 0; i < Puzzles.Length; i++) {
+        if ((Input.GetAxis("Mouse ScrollWheel") != 0) && (ScrollFlag == false)) {
+            ScrollFlag = true;
+            StartCoroutine(FlipOver());
+        }
+
+        if (CorrectCount >= 70) {
+            SceneManager.LoadScene("Stage#03Clear");
+        }
+    }
+
+    IEnumerator FlipOver() {
+        for (int i=0; i<18; i++) {
+            TablePuzzle.GetComponent<Transform>().Rotate(0, 10, 0);
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        for (int i = 0; i < Puzzles.Length; i++) {
                 if (Puzzles[i].activeSelf == true) {
                     Puzzles[i].SetActive(false);
                     Puzzles[i].GetComponent<PieceControl>().BackPiece.SetActive(true);
@@ -61,7 +83,8 @@ public class DragAndDrop : MonoBehaviour {
                     Puzzles[i].SetActive(true);
                     Puzzles[i].GetComponent<PieceControl>().BackPiece.SetActive(false);
                 }
-            }
         }
+
+        ScrollFlag = false;
     }
 }
