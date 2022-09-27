@@ -24,7 +24,7 @@ public class LaunchMissile : MonoBehaviour
     private bool           first = true;
 
     public void Awake() {
-        deskSpriteRenderer = Desk.GetComponent<SpriteRenderer>();
+        deskSpriteRenderer   = Desk.GetComponent<SpriteRenderer>();
         buttonSpriteRenderer = Button.GetComponent<SpriteRenderer>();
     }
 
@@ -37,11 +37,7 @@ public class LaunchMissile : MonoBehaviour
                          Instantiate(Missile_2, new Vector3(0f, -5.0f, 0f), Quaternion.identity);
                          Instantiate(Missile_3, new Vector3(0f, -5.0f, 0f), Quaternion.identity);
 
-            GameManager.Instance.LoadStage(
-                () => { return Object != null; },
-                GameManager.Instance.CutScene2,
-                false ,2.0f
-            );
+            GameManager.Instance.LoadStage(() => { return Object != null; }, GameManager.Instance.CutScene02, 6.0f);
 
             first = false;
         }
@@ -57,7 +53,7 @@ public class LaunchMissile : MonoBehaviour
     }
 
     private IEnumerator BackgroundDim() {
-        Color deskColor = deskSpriteRenderer.color;
+        Color deskColor   = deskSpriteRenderer.color;
         Color buttonColor = buttonSpriteRenderer.color;
         rgb = 255f;
         while (rgb > 60f) {
