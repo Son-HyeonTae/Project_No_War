@@ -23,7 +23,7 @@ public class EnemyGenerateRequest : Singleton<EnemyGenerateRequest>
 
     private void Awake()
     {
-        ABSOLUTE_PATH = Application.dataPath + "/Stage#4/EnemyGenerateSequence.txt";
+        ABSOLUTE_PATH = Application.streamingAssetsPath + "/Stage#04/EnemyGenerateSequence.txt";
 
         ElapsedTime = 0;
 
@@ -41,7 +41,6 @@ public class EnemyGenerateRequest : Singleton<EnemyGenerateRequest>
     {
         if (!GameManager.Instance.bLoadedScene)
         {
-            Debug.Log("Don't Load Scene");
             return;
         }
 

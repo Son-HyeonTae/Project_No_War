@@ -16,7 +16,7 @@ public class CooltimeQueue : Singleton<CooltimeQueue>
     ///=============================================
     ///      primitive  
     ///=============================================
-    private Dictionary<string, GameObject> OriginalObjectDict;
+    private Dictionary<string, CooltimeQueueRegisterData> OriginalObjectDict;
 
     ///=============================================
     ///      private struct
@@ -41,7 +41,7 @@ public class CooltimeQueue : Singleton<CooltimeQueue>
 
     private void Awake()
     {
-        OriginalObjectDict = new Dictionary<string, GameObject>();
+        OriginalObjectDict = new Dictionary<string, CooltimeQueueRegisterData>();
     }
 
 
@@ -65,6 +65,15 @@ public class CooltimeQueue : Singleton<CooltimeQueue>
         return true;
     }
 
+    public float TryGetObjectRemainCooltime(GameObject Object)
+    {
+        if(OriginalObjectDict.TryGetValue(Object.name, out var val))
+        {
+            return val.RemainCooltime;
+        }
+        return -1;
+    }
+
 
     /**
     * 쿨타임 목록에 추가
@@ -84,7 +93,7 @@ public class CooltimeQueue : Singleton<CooltimeQueue>
         pair.Object = O;
         pair.BeginTime = GameManager.Instance.GameTime;
         pair.ObjectCooltime = time;
-        OriginalObjectDict.Add(O.name, O);
+        OriginalObjectDict.Add(O.name, pair);
         StartCoroutine(AddCooldownCor(pair));
         return true;
     }
@@ -99,9 +108,13 @@ public class CooltimeQueue : Singleton<CooltimeQueue>
     */
     private IEnumerator AddCooldownCor(CooltimeQueueRegisterData data)
     {
-        data.RemainCooltime = data.ObjectCooltime - (GameManager.Instance.GameTime - data.BeginTime);
-        yield return new WaitForSeconds(data.ObjectCooltime);
-        OriginalObjectDict.Remove(data.Object.name);
+        if(OriginalObjectDict.TryGetValue(data.Object.name, out var go))
+        {
+            go.RemainCooltime = go.ObjectCooltime - (GameManager.Instance.GameTime - go.BeginTime);
+            yield return new WaitForSeconds(go.ObjectCooltime);
+            OriginalObjectDict.Remove(go.Object.name);
+        }
+        yield return null;
     }
 
     //---------------------------------------------------------------

@@ -31,7 +31,7 @@ public class Projectile : MonoBehaviour
             if(hit.transform.TryGetComponent<Entity>(out var entity))
             {
                 if(entity)
-                    entity.TakeHit(Damage, eEntityHitType.STIFF);
+                    entity.TakeHit(Damage, eEntityHitType.NORMAL);
                 RequestDespawn();
             }
             if (hit.transform.CompareTag("Block"))

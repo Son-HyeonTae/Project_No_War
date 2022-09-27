@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public class FlashBang : RangeAttackWeaponType
 {
-    private Image Flash;
+    FlashBangUIAction UIAction;
 
     public override void Awake()
     {
-        HitRange        = new Vector3(1, 1);
+        HitRange        = new Vector3(3, 3);
         Angle           = 0;
         ExplosionDelay  = 0;
         Damage          = 20;
@@ -18,8 +18,7 @@ public class FlashBang : RangeAttackWeaponType
         base.Awake();
 
 
-        Flash = GameObject.Find("FlashBangUI").GetComponent<Image>();
-        Flash.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        UIAction = GameObject.Find("FlashBangUI").GetComponent<FlashBangUIAction>();
     }
 
     public override void Execute(Vector3 Coordinate)
@@ -36,12 +35,9 @@ public class FlashBang : RangeAttackWeaponType
 
     private void HitEffect()
     {
-        /*Flash.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-
-        StartCoroutine(GameManager.Instance.FadeOut(0.02f, 0.0f, Flash, ()
-            => {
-                StartCoroutine(GameManager.Instance.FadeIn(0.7f, 0.0f, Flash));
-            }));
-*/
+        //StartCoroutine(GameManager.Instance.FadeOut(0.2f, 0.0f, Flash));
+        UIAction.Flash();
     }
+
+    
 }

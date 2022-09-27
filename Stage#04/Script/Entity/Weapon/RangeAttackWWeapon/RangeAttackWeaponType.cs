@@ -156,8 +156,6 @@ public class RangeAttackType : MonoBehaviour
     /* 구현 방법이 올바른지 모르겠음 */
     public IEnumerator OnActiveAction(Action<Entity> action, Action effect)
     {
-        effect();
-
         Collider.enabled = true;
         TagObjects = Physics2D.OverlapBoxAll(transform.position, Parent.HitRange, Parent.Angle);
 
@@ -170,7 +168,7 @@ public class RangeAttackType : MonoBehaviour
                 action(entity);
             }
         }
-
+        effect();
         yield return null;
         Destroy(gameObject);
     }

@@ -43,7 +43,6 @@ public class Gun : MonoBehaviour
     {
         if (!GameManager.Instance.bLoadedScene)
         {
-            Debug.Log("Don't Load Scene");
             return;
         }
 

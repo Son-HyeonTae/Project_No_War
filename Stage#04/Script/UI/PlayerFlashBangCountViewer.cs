@@ -6,16 +6,19 @@ using TMPro;
 //FlashBang
 public class PlayerFlashBangCountViewer : MonoBehaviour
 {
-    private TextMeshProUGUI textFlashBangCount;
-    public Weapon TargetWeaponPrefab;
+    [SerializeField] private TextMeshProUGUI textFlashBangCount;
+    private Weapon TargetWeaponPrefab;
 
-    private void Awake()
+    private void Start()
     {
-        textFlashBangCount = GetComponent<TextMeshProUGUI>();
+        TargetWeaponPrefab = GameObject.Find("FlashBang").GetComponent<Weapon>();
+        
     }
 
     private void Update()
     {
-        textFlashBangCount.text = WeaponManager.Instance.GetWeaponInDict(TargetWeaponPrefab.name).data.Amount.Value.ToString();
+        Weapon data = WeaponManager.Instance.GetWeaponInDict(TargetWeaponPrefab.name);
+        if (data)
+            textFlashBangCount.text = data.data.Amount.Value.ToString();
     }
 }

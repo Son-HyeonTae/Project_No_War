@@ -18,7 +18,7 @@ public class Mob : Entity
     public virtual void Start()
     {
         var ui = Instantiate(HpUIObject);
-        ui.Attachment(this, new Vector3(0, -.2f), data);
+        ui.Attachment(this, new Vector3(0, -.7f), data);
 
     }
 }

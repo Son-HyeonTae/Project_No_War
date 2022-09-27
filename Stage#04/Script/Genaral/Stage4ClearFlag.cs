@@ -9,7 +9,7 @@ using UnityEngine;
 * @최종 수정자 - 살메
 * @최종 수정일 - 2022-08-25::15:14
 */
-public class Stage4ClearFlag : MonoBehaviour
+public class Stage4ClearFlag : Singleton<Stage4ClearFlag>
 {
     public enum Stage4GameFlag
     {
@@ -19,6 +19,7 @@ public class Stage4ClearFlag : MonoBehaviour
     }
 
     private float ClearTime;
+    float ElapsedTime = 0;
     public float RemainTime { get; private set; } = 0.0f;
     public Stage4GameFlag Stage4Flag { get; private set; }
     public bool bStage4End { get; private set; }
@@ -38,7 +39,6 @@ public class Stage4ClearFlag : MonoBehaviour
         */
         if(!GameManager.Instance.bLoadedScene)
         {
-            Debug.Log("Don't Load Scene");
             return;
         }
 
@@ -49,26 +49,32 @@ public class Stage4ClearFlag : MonoBehaviour
         {
             Stage4Flag = Stage4GameFlag.FAIL;
         }
-
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            Stage4Flag = Stage4GameFlag.CLEAR;
+        }
 
         GameManager.Instance.LoadStage(
             () => { return Stage4Flag == Stage4GameFlag.CLEAR; },
-            GameManager.Instance.CutScene9
+            
+            GameManager.Instance.CutScene09
             );
 
         GameManager.Instance.LoadStage(
             () => { return Stage4Flag == Stage4GameFlag.FAIL; },
-            GameManager.Instance.CutScene8
+            GameManager.Instance.CutScene09
             );
     }
 
     private void Transition()
     {
-        RemainTime = ClearTime - GameManager.Instance.GameTime;
-
-        if(RemainTime <= 0.0f)
+        ElapsedTime += Time.deltaTime;
+        RemainTime = ClearTime - ElapsedTime;
+        Debug.Log(RemainTime);
+        if (RemainTime <= 0.0f)
         {
             RemainTime = 0.0f;
+            ElapsedTime = 0.0f;
             Stage4Flag = Stage4GameFlag.CLEAR;
             bStage4End = true;
 

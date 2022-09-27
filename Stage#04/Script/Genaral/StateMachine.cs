@@ -19,7 +19,7 @@ public class StateMachine : MonoBehaviour
     public Statement        GetCurrentState         { get { return CurrentState; } }
     public Statement        PreviousPreviousState   { get { return PreviousState; } }
     public Statement_Move   MoveState               { get; private set; }
-    public Statement_Hide   HideState               { get; private set; }
+    //public Statement_Hide   HideState               { get; private set; }
     public Statement_Stiff  StiffState              { get; private set; }
     public Statement_IDLE   IDLEState               { get; private set; }
     public Statement_Faint  FaintState              { get; private set; }
@@ -31,7 +31,7 @@ public class StateMachine : MonoBehaviour
     {
         EntityComponent = GetComponent<Entity>();
         MoveState           = gameObject.AddComponent<Statement_Move>();
-        HideState           = gameObject.AddComponent<Statement_Hide>();
+        //HideState           = gameObject.AddComponent<Statement_Hide>();
         StiffState          = gameObject.AddComponent<Statement_Stiff>();
         IDLEState           = gameObject.AddComponent<Statement_IDLE>();
         FaintState          = gameObject.AddComponent<Statement_Faint>();
@@ -39,7 +39,7 @@ public class StateMachine : MonoBehaviour
     // State Parent Initialize Point -- StateMachine.Awake()
         MoveState.Parent    = EntityComponent;
         StiffState.Parent   = EntityComponent;
-        HideState.Parent    = EntityComponent;
+        //HideState.Parent    = EntityComponent;
         IDLEState.Parent    = EntityComponent;
         FaintState.Parent   = EntityComponent;
     }
@@ -74,7 +74,7 @@ public class StateMachine : MonoBehaviour
             CurrentState = state;
             CurrentState.OnEnter();
 
-            Debug.Log("Changed " + PreviousState + " -> " + CurrentState);
+            //Debug.Log("Changed " + PreviousState + " -> " + CurrentState);
             return true;
         }
 
@@ -195,8 +195,7 @@ public class Statement_Stiff : Statement
     public float Duration { get; set; }
     public Vector3 HitDir { get; set; }
 
-    private float ElapsedTime;
-
+    private  float ElapsedTime;
 
     private void OnEnable()
     {
@@ -208,30 +207,27 @@ public class Statement_Stiff : Statement
     public override void OnEnter()
     {
         base.OnEnter();
-        /*if (!bStiffEnd)
-            return;*/
-
         Parent.AnimController.SwitchAnimation("Stiff");
-
         Duration = 0.5f;
 
         ElapsedTime = 0.0f;
 /*        bCanChange = false;
-*/    }
+*/   }
 
     public override void Condition()
     {
         base.Condition();
 
         ElapsedTime += Time.deltaTime;
+
         if (ElapsedTime >= Duration)
         {
 /*            bCanChange = true;
-*/            Parent.AnimController.SwitchAnimation("Walk");
+*/          Parent.AnimController.SwitchAnimation("Walk");
             Machine.Change(Machine.MoveState);
         }
     }
-
+    
 }
 
 /**
@@ -261,7 +257,6 @@ public class Statement_Move : Statement
     private Vector3 EndPoint;
 
 
-    private List<HidableObject> OldCol;
     private float HidableObjectDetectRange;
 
     private void OnDisable()
@@ -271,7 +266,6 @@ public class Statement_Move : Statement
 
     private void Awake()
     {
-        OldCol = new List<HidableObject>();
         HidableObjectDetectRange = 10.0f;
     }
 
@@ -323,9 +317,8 @@ public class Statement_Move : Statement
 * @최종 수정자 - 살메
 * @최종 수정일 - 2022-08-25::15:14
 */
-public class Statement_Hide : Statement
+/*public class Statement_Hide : Statement
 {
-    public HidableObject HideBases;
     private Vector3 BeginPoint, EndPoint;
 
 
@@ -333,18 +326,15 @@ public class Statement_Hide : Statement
     {
         base.OnEnter();
         BeginPoint = transform.position;
-        EndPoint = HideBases.HidableObjectPosition;
 
         if (RandomValue.Instance.Random(100))
         {
 
             Parent.PathFindSystem.StartPathFind(BeginPoint, EndPoint);
             Parent.AnimController.SwitchAnimation("Walk");
-            HideBases.InUse(Parent);
         }
         else
         {
-            HideBases.UseOut();
             Machine.Change(Machine.MoveState);
         }
     }
@@ -365,4 +355,4 @@ public class Statement_Hide : Statement
         Machine.Change(Machine.MoveState);
     }
 
-}
+}*/

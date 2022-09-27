@@ -5,21 +5,19 @@ using TMPro;
 
 public class PlayerGrenadeCountViewer : MonoBehaviour
 {
-    private TextMeshProUGUI textMineCount;
-    public Weapon TargetWeaponPrefab;
+    [SerializeField] private TextMeshProUGUI textFlashBangCount;
+    private Weapon TargetWeaponPrefab;
 
-    private void Awake()
+    private void Start()
     {
-        textMineCount = GetComponent<TextMeshProUGUI>();
+        TargetWeaponPrefab = GameObject.Find("Grenade").GetComponent<Weapon>();
+
     }
 
     private void Update()
     {
-        if (!GameManager.Instance.bLoadedScene)
-        {
-            Debug.Log("Don't Load Scene");
-            return;
-        }
-        textMineCount.text = WeaponManager.Instance.GetWeaponInDict(TargetWeaponPrefab.name).data.Amount.Value.ToString();
+        Weapon data = WeaponManager.Instance.GetWeaponInDict(TargetWeaponPrefab.name);
+        if (data)
+            textFlashBangCount.text = data.data.Amount.Value.ToString();
     }
 }

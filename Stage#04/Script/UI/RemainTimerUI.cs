@@ -23,11 +23,10 @@ public class RemainTimerUI : MonoBehaviour
     {
         if (!GameManager.Instance.bLoadedScene)
         {
-            Debug.Log("Don't Load Scene");
             return;
         }
-        string m = '0' + (Flag.RemainTime / 60).ToString("F0");
-        string s = (Flag.RemainTime % 60) < 10 ? '0' + (Flag.RemainTime % 60).ToString("F0") : (Flag.RemainTime % 60).ToString("F0");
+        string m = '0' + ((int)Flag.RemainTime / 60).ToString();
+        string s = ((int)Flag.RemainTime % 60) < 10 ? '0' + ((int)Flag.RemainTime % 60).ToString() : ((int)Flag.RemainTime % 60).ToString();
 
         TimerText.text = m + ":" + s;
     }

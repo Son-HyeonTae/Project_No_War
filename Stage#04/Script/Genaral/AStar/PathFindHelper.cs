@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PathFindHelper : MonoBehaviour
 {
@@ -11,6 +12,16 @@ public class PathFindHelper : MonoBehaviour
 
     public bool bEndPathFinding { get; private set; } = true;
     public float Velocity { get; set; }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
+    }
+
+    private void SceneManager_sceneUnloaded(Scene arg0)
+    {
+        StopPathFinding();
+    }
 
     public void StartPathFind(Vector3 Start, Vector3 End)
     {

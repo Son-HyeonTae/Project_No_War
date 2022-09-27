@@ -14,9 +14,10 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Scriptable Object Asset/WeaponData")]
 public class WeaponData : ScriptableObject
 {
-    public DATA<float> Damage   = new DATA<float>();
-    public DATA<float> Cooltime = new DATA<float>();
-    public DATA<int> Amount     = new DATA<int>();
+    public DATA<float> Damage           = new DATA<float>();
+    public DATA<float> Cooltime         = new DATA<float>();
+    public DATA<float> RemainCooltime   = new DATA<float>();
+    public DATA<int> Amount             = new DATA<int>();
 
     public bool bImmediateStart;                                ///즉시 시전 플래그, 활성화 시, WeaponPreview를 수행하지 않음
     public GameObject NoneImmediatePreviewSource;               ///지점조작 WeaponPreview Sprite
@@ -54,7 +55,6 @@ public class Weapon : MonoBehaviour
     {
         if (!GameManager.Instance.bLoadedScene)
         {
-            Debug.Log("Don't Load Scene");
             return;
         }
     }
@@ -62,7 +62,6 @@ public class Weapon : MonoBehaviour
     {
         if (!GameManager.Instance.bLoadedScene)
         {
-            Debug.Log("Don't Load Scene");
             return;
         }
     }

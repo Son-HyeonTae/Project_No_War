@@ -25,7 +25,6 @@ public enum eEntityHitType
 
 public class Entity : MonoBehaviour, IDamgeable
 {
-    protected List<Debuff> MyDebuff;
     protected eEntityHitType MyHitType { get; set; }
 
     ///=================================
@@ -104,13 +103,6 @@ public class Entity : MonoBehaviour, IDamgeable
         {
             Die();
         }
-    }
-
-    //incomplete
-    public void AddDebuff(Debuff debuff, float time)
-    {
-        MyDebuff.Add(debuff);
-        //CooltimeQueue.Instance.Add()
     }
 
     private void Die()

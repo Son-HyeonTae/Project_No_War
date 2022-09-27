@@ -14,6 +14,8 @@ using System;
 public class WeaponManager : Singleton<WeaponManager>
 {
     public List<Weapon> WeaponList;
+    private List<Weapon> Weapons; //내부사용 리스트
+    
     private Dictionary<string, Weapon> WeaponData;
     private Vector3 UsePoint;
 
@@ -30,11 +32,13 @@ public class WeaponManager : Singleton<WeaponManager>
         mainCamera = Camera.main;
         WeaponPreview = gameObject.AddComponent<ShowWeaponPreview>();
         WeaponData = new Dictionary<string, Weapon>();
+        Weapons = new List<Weapon>();
         foreach (var weapon in WeaponList)
         {
             var Go = Instantiate(weapon, transform);
             Go.name = weapon.name;
             WeaponData.Add(Go.name, Go);
+            Weapons.Add(Go);
         }
     }
 
@@ -42,14 +46,11 @@ public class WeaponManager : Singleton<WeaponManager>
     {
         if (!GameManager.Instance.bLoadedScene)
         {
-            Debug.Log("Don't Load Scene");
             return;
         }
 
-
-
         SetWeapon();
-
+        //GetWeaponRemainCooltime();
         /**
         * 선택한 무기의 쿨타임 여부 및 즉시시전 여부 판단 후 기능 수행
         * 즉시시전이 아닐 경우 WeaponPreview 시작
@@ -95,6 +96,18 @@ public class WeaponManager : Singleton<WeaponManager>
         UsePoint = Vector3.zero;
         SelectedWeapon = null;
     }
+
+    /*private void GetWeaponRemainCooltime()
+    {
+        for(int i = 0; i < WeaponData.Count; ++i)
+        {
+            //Debug.Log(Weapons[i].name + "remain cooldown : " + Weapons[i].data.RemainCooltime.Value);
+            if (!CooltimeQueue.Instance.CheckObjectCooltimeIsOver(Weapons[i].gameObject))
+            {
+                Weapons[i].data.RemainCooltime.Value = CooltimeQueue.Instance.TryGetObjectRemainCooltime(Weapons[i].gameObject);
+            }
+        }
+    }*/
 
     public Weapon GetWeaponInDict(string key)
     {
