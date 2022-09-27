@@ -5,6 +5,8 @@ using System.Collections;
 
 public class DragAndDrop : MonoBehaviour {
     [SerializeField]
+    private GameObject   ClearButton;
+    [SerializeField]
     private GameObject   TablePuzzle;
     private GameObject[] Puzzles;
     public  GameObject   SelectedPiece;
@@ -20,6 +22,9 @@ public class DragAndDrop : MonoBehaviour {
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),Vector2.zero);
+            if (hit.transform.CompareTag("GameController")) {
+                GameManager.Instance.LoadStage(() => { return true; }, GameManager.Instance.CutScene08);
+            }
 
             if (hit.transform.CompareTag("Puzzle")) {
                 if (!hit.transform.GetComponent<PieceControl>().InRightPosition) {
@@ -28,7 +33,6 @@ public class DragAndDrop : MonoBehaviour {
                     SelectedPiece.GetComponent<SortingGroup>().sortingOrder = OrderInLayer;
                     OrderInLayer++;
                 }
-
             }
 
             if (hit.transform.CompareTag("BackPuzzle")) {
@@ -39,6 +43,7 @@ public class DragAndDrop : MonoBehaviour {
                     OrderInLayer++;
                 }
             }
+
         }
 
         if (Input.GetMouseButtonUp(0)) {
@@ -64,7 +69,17 @@ public class DragAndDrop : MonoBehaviour {
         }
 
         if (CorrectCount >= 70) {
-            SceneManager.LoadScene("Stage#03Clear");
+            
+            ClearButton.SetActive(true);
+        }
+
+
+
+        ///HotKey
+        ///
+        if(Input.GetKeyDown(KeyCode.F1))
+        {
+            GameManager.Instance.LoadStage(() => { return true; }, GameManager.Instance.CutScene08);
         }
     }
 
