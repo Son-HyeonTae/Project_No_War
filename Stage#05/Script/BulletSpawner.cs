@@ -25,20 +25,26 @@ public class BulletSpawner : MonoBehaviour
         
     }
 
-
+    // bool once = true;
     // void Update()
     // {
     //     // 임시로 random 설정.
-    //     if(Time.time - lastFireTime > 7f)
-    //     {   
-    //         StartCoroutine(Fire(Random.Range(0, 4)));
-    //         lastFireTime = Time.time;
+    //     // if(Time.time - lastFireTime > 7f)
+    //     // {   
+    //     //     StartCoroutine(Fire(Random.Range(0, 4)));
+    //     //     lastFireTime = Time.time;
+    //     // }
+    //     if(once == true)
+    //     {
+    //         StartCoroutine(Fire(Random.Range(1, 5)));
+    //         once = false;
     //     }
         
     // }
 
     public void SpawnBullet(int line)
     {
+        Debug.Log("fire");
         StartCoroutine(Fire(line));
     }
     

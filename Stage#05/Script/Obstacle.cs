@@ -16,42 +16,43 @@ public class Obstacle : MonoBehaviour
     }
     
     private LineState myLineState;
-    private Vector2 destination;
+    protected Vector2 destination;
     private float time;
-    float increaseSpeed = 0.23f;
-    float maxSize = 1.6f;
+    float increaseSpeed = 0.045f;
+    float maxSize = 0.19f;
     private Vector2 nowScale;
-    private float increaseVec = 0;
+    private float increaseVec = 0.1f;
 
     private void Start()
     {
         // Line1
-        if(transform.position.x == -1.08f)
+        if(transform.position.x == -1.1f)
         {
             myLineState = LineState.Line1;
         }
-        if(transform.position.x == -0.35f)
+        if(transform.position.x == -0.47f)
         {
             myLineState = LineState.Line2;
         }
-        if(transform.position.x == 0.44f)
+        if(transform.position.x == 0.18f)
         {
             myLineState = LineState.Line3;
         }
-        if(transform.position.x == 1.14f)
+        if(transform.position.x == 0.7f)
         {
             myLineState = LineState.Line4;
         }
         // 이동 위치 찾기
-        destination = Goal.transform.Find("" + myLineState).position;
-        // Debug.Log("" + myLineState);
+        destination = Goal.transform.Find("End" + myLineState).position;
+        Debug.Log("장애물 위치:"+myLineState);
+        Debug.Log("목표 위치:"+destination);
 
     }
 
 
     void Update()
     {
-        if(!GMScene5.isGameover)
+        if(!GMScene5.isGameover && GMScene5.isStart)
         {
             Move();
             IncreaseSize();
@@ -60,7 +61,7 @@ public class Obstacle : MonoBehaviour
         
     }
 
-    private void Move()
+    protected void Move()
     {
         increaseVec += 1f * Time.deltaTime;
         transform.position = Vector2.MoveTowards(transform.position, destination, moveVelocity * Time.deltaTime * increaseVec );
@@ -72,13 +73,15 @@ public class Obstacle : MonoBehaviour
     private void IncreaseSize()
     {
         nowScale = transform.localScale;
-        if(transform.localScale.x < 0.4f)
+        if(transform.localScale.x < 0.1f)
         {
-            transform.localScale = nowScale + (Vector2.one * Time.deltaTime * increaseSpeed * 6);
+            // 더 빠르게 증가
+            transform.localScale = nowScale + (Vector2.one * Time.deltaTime * increaseSpeed );
         }
         if(transform.localScale.x < maxSize)
         {
-            transform.localScale = nowScale + (Vector2.one * Time.deltaTime * increaseSpeed );
+            // 더 빠르게 증가
+            transform.localScale = nowScale + (Vector2.one * Time.deltaTime * increaseSpeed * 1.5f);
         }
 
     }

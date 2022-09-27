@@ -8,10 +8,11 @@ public class Tile : MonoBehaviour
     public enum Type
     {
         Obstacle,
-        Bullet
+        Bullet,
+        End
     }
 
-    public Type tileType;
+    [HideInInspector] public Type tileType;
 
     [SerializeField] private float tileVelocity;
 
@@ -25,16 +26,16 @@ public class Tile : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        TileMove();
+        if(!GMScene5.isGameover && GMScene5.isStart)
+        {
+
+            TileMove();
+        }
+        
     }
 
     private void TileMove()
     {
-        // transform.position = Vector2.MoveTowards(transform.position, )
-        if(!GMScene5.isGameover)
-        {
-            tileRigidbody.velocity = tileVelocity * Vector2.down;
-        }
-        
+        tileRigidbody.velocity = tileVelocity * Vector2.down; 
     }
 }

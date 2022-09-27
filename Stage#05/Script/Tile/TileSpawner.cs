@@ -11,8 +11,7 @@ public class TileSpawner : MonoBehaviour
     // txt 파일 읽고 타일 생성.
     private void Awake()
     {
-    
-        FileStream tileData = new FileStream("Assets/Stage#5/TileData.txt", FileMode.Open);
+        FileStream tileData = new FileStream("C:/Users/GIPLAB/Desktop/TileData.txt", FileMode.Open);
         StreamReader reader = new StreamReader(tileData);
 
         string stringLine = reader.ReadLine();
@@ -20,7 +19,8 @@ public class TileSpawner : MonoBehaviour
         Vector2 tilePos;
 
         while(stringLine != null)
-        {
+        {   
+
             stringValue = stringLine.Split(" ");
             // 타일 위치 저장.
             tilePos = new Vector2(float.Parse(stringValue[1]), float.Parse(stringValue[2]));
@@ -30,16 +30,23 @@ public class TileSpawner : MonoBehaviour
             // 타일 타입 지정
             if(stringValue[0] == "0") // obstacle
             {
+            
                 tile.tileType = Tile.Type.Obstacle;
             }
-            else  // bullet
+            else if(stringValue[0] == "1")  // bullet
             {
                 tile.tileType = Tile.Type.Bullet;
                 // 색 빨강으로 변경.
                 SpriteRenderer tileRenderer = instance.GetComponent<SpriteRenderer>();
                 tileRenderer.color = Color.red;
             }
-            Debug.Log(tile.tileType);
+            else
+            {
+                // game 종료
+                tile.tileType = Tile.Type.End;
+                SpriteRenderer tileRenderer = instance.GetComponent<SpriteRenderer>();
+                tileRenderer.color = Color.blue;
+            }
 
             stringLine = reader.ReadLine();
 

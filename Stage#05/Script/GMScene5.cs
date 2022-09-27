@@ -10,10 +10,13 @@ public class GMScene5 : MonoBehaviour
     // GameeManager는 싱글턴으로 구현.
     public static GMScene5 instance;
     public static bool isGameover;
+    public static bool isStart;
 
     [SerializeField] private GameObject[] warningImgs;
     [SerializeField] private GameObject[] haertImgs;
+    [SerializeField] private GameObject[] haertBreakImgs;
     [SerializeField] private CameraShake cameraShake;
+    [SerializeField] private GameObject gameoverUI;
 
     // Start is called before the first frame update
     private void Awake()
@@ -31,15 +34,20 @@ public class GMScene5 : MonoBehaviour
     void Start()
     {
         isGameover = false;
+        isStart = false;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(isGameover)
+        {
+            // 게임 오버이면 게임 오버 UI 활성화
+            gameoverUI.SetActive(true);
+        }
     }
-
+    
     public void EnableWarning(int line)
     {
         warningImgs[line].SetActive(true);
@@ -48,14 +56,30 @@ public class GMScene5 : MonoBehaviour
     {
         warningImgs[line].SetActive(false);
     }
-    public void DisableHeart(int life)
+
+
+    public void BreakHeart(int life)
     {
         haertImgs[(2 - life)].SetActive(false);
+        haertBreakImgs[(2 - life)].SetActive(true);
     }
 
     public void Shake()
     {
         StartCoroutine(cameraShake.Shake(0.15f, 0.3f));
+    }
+
+    public void LoadNext() 
+    {
+        if(!isGameover)
+        {
+            SceneManager.LoadScene("CutScene11");
+        }
+    }
+
+    public void ReStart()
+    {
+        SceneManager.LoadScene("Stage#05");
     }
 }
 

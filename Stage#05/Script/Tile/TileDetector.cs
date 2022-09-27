@@ -29,15 +29,16 @@ public class TileDetector : MonoBehaviour
                     obstacleSpanwer.SpawnObstacle(line);
                     
                 } // Bullet 타일
-                else
+                else if(otherTile.tileType == Tile.Type.Bullet)
                 {
                     //bulletSpawner 호출
                     bulletSpanwer.SpawnBullet(line);
                 }
+                else
+                {
+                    GMScene5.instance.LoadNext();
+                }
 
-
-                // bulletSpawner 함수 호출.
-                Debug.Log(line);
             }
         }
 

@@ -29,19 +29,23 @@ public class Player : MonoBehaviour
     }
 
     [HideInInspector] public State carState = State.Normal;
+    
     public float test = 3f;
 
     private float lastMoveTime = 0f;
 
     private AudioSource carAudio;
+    private Animator animator;
+    [SerializeField] private Sprite[] lineSprite;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
         //배열 line 초기화
-        line[0] = new Vector2( -3.51f, -3.41f );
-        line[1] = new Vector2( -1.17f, -3.41f );
-        line[2] = new Vector2( 1.17f, -3.41f );
-        line[3] = new Vector2( 3.51f, -3.41f );
+        line[0] = new Vector2( -3.7f, -4.3f );
+        line[1] = new Vector2( -1.3f, -4.3f );
+        line[2] = new Vector2( 1.05f, -4.3f );
+        line[3] = new Vector2( 3.4f, -4.3f );
 
         lineIndex = 2; // line 3
         movePos = line[lineIndex];
@@ -51,15 +55,24 @@ public class Player : MonoBehaviour
         Vector2 o = transform.localPosition;
 
         // AudioSource
-        carAudio = GetComponent<AudioSource>();
-        carAudio.enabled = false;
+        // carAudio = GetComponent<AudioSource>();
+        // carAudio.enabled = false;
+        // Animator
+        animator = GetComponent<Animator>();
+        // sprite Renderer
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!GMScene5.isGameover)
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            GMScene5.isStart = true;
+        }
+        if(!GMScene5.isGameover && GMScene5.isStart)
         {
             UpdateMove();
             float dis = Time.time - lastMoveTime;
@@ -97,26 +110,41 @@ public class Player : MonoBehaviour
             lastMoveTime = Time.time;
         }
         movePos = line[lineIndex];
+        // changeAnim(lineIndex + 1);
+        changeSprite(lineIndex);
     
+    }
+
+    // 현재 lineIndex에 따라 animation을 변경
+    // private void changeAnim(int line)
+    // {
+    //     animator.SetInteger("Line", line);
+    //     Debug.Log(line);
+        
+    // }
+    
+    // sprite 변경
+    private void changeSprite(int line)
+    {
+        spriteRenderer.sprite = lineSprite[line];
     }
 
     // 장애물과 충돌시
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("충돌함수 호출");
         // 장애물과 부딪히면
         if(other.tag == "Obstacle" && carState == State.Normal)
         {
-            Debug.Log("자동차가 충돌함: " + other.tag);
             life--;
-            Debug.Log("목숨 " + life);
+            GMScene5.instance.BreakHeart(life);
+            GMScene5.instance.Shake();
             if(life <= 0)
             {
                 GMScene5.isGameover = true;
             }                
             else
             {
-                GMScene5.instance.Shake();
-                GMScene5.instance.DisableHeart(life);
                 StartCoroutine(DamageView());
             }
         }
@@ -137,7 +165,7 @@ public class Player : MonoBehaviour
             else
             {
                 GMScene5.instance.Shake();
-                GMScene5.instance.DisableHeart(life);
+                GMScene5.instance.BreakHeart(life);
                 StartCoroutine(DamageView());
             }
             
@@ -152,7 +180,7 @@ public class Player : MonoBehaviour
     {
         carState = State.Wounded;
         Color carColor = carRenderer.color;
-        carAudio.enabled = true;
+        // carAudio.enabled = true;
         for(int i = 0; i < 3; i++)
         {
             // 0 is transparent(투명한), 1 is opaque(불투명한)
@@ -163,7 +191,7 @@ public class Player : MonoBehaviour
             carRenderer.color = carColor;
             yield return new WaitForSeconds(0.4f);
         }
-        carAudio.enabled = false;
+        // carAudio.enabled = false;
         carState = State.Normal;
     }
 }
