@@ -22,14 +22,18 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {
             Instantiate(stampAnimation, new Vector3(0, 0, 0), Quaternion.identity);
             isRed = false;
-            count--;
             docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
+            if (count >= 1) {
+                count--;
+            }
         }
         else if (Input.GetMouseButtonDown(1)) {
             Instantiate(stampAnimation, new Vector3(0, 0, 0), Quaternion.identity);
             isRed = true;
-            count--;
-            docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();    
+            docSpawner.GetComponent<DocumentSpawner>().SpawnDocuments();
+            if (count >= 1) {
+                count--;
+            }
         }
     }
 }

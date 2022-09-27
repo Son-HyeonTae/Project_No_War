@@ -11,8 +11,6 @@ public class TimeLimit : MonoBehaviour
     private float  timeDamage   = 5.0f;
     [SerializeField]
     private float  timeIncrease = 3.0f;
-    [SerializeField]
-    private string nextSceneName;
     
     [SerializeField]
     private float  maxTime      = 100f;
@@ -23,21 +21,28 @@ public class TimeLimit : MonoBehaviour
     private void Awake() {
         currentTime = maxTime;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        StartCoroutine("TimeCountDown");
     }
 
-    private void Update() {
-        if      (playerController.count >= 80) currentTime -= 10f * Time.deltaTime;
-        else if (playerController.count >= 70) currentTime -= 14f * Time.deltaTime;
-        else if (playerController.count >= 60) currentTime -= 18f * Time.deltaTime;
-        else if (playerController.count >= 50) currentTime -= 20f * Time.deltaTime;
-        else if (playerController.count >= 40) currentTime -= 22f * Time.deltaTime;
-        else if (playerController.count >= 30) currentTime -= 24f * Time.deltaTime;
-        else if (playerController.count >= 20) currentTime -= 26f * Time.deltaTime;
-        else if (playerController.count >= 10) currentTime -= 28f * Time.deltaTime;
-        else if (playerController.count >=  0) currentTime -= 29f * Time.deltaTime;
+    private IEnumerator TimeCountDown() {
+        yield return new WaitForSeconds(1.5f);
 
-        if (currentTime <= 0) {
-        SceneManager.LoadScene(nextSceneName);
+        while (true) {
+            if (currentTime <= 0) {
+            SceneManager.LoadScene("Stage#02GameOver");
+            }
+
+            if      (playerController.count >= 80) currentTime -= 10f * Time.deltaTime;
+            else if (playerController.count >= 70) currentTime -= 14f * Time.deltaTime;
+            else if (playerController.count >= 60) currentTime -= 18f * Time.deltaTime;
+            else if (playerController.count >= 50) currentTime -= 20f * Time.deltaTime;
+            else if (playerController.count >= 40) currentTime -= 22f * Time.deltaTime;
+            else if (playerController.count >= 30) currentTime -= 24f * Time.deltaTime;
+            else if (playerController.count >= 20) currentTime -= 26f * Time.deltaTime;
+            else if (playerController.count >= 10) currentTime -= 28f * Time.deltaTime;
+            else if (playerController.count >=  0) currentTime -= 29f * Time.deltaTime;
+            
+            yield return null;
         }
     }
 
