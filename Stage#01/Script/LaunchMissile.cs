@@ -28,6 +28,7 @@ public class LaunchMissile : MonoBehaviour
         buttonSpriteRenderer = Button.GetComponent<SpriteRenderer>();
     }
 
+    // Trigger
     public void Launch() {
         if (first) {
             StartCoroutine("PushButton");
@@ -43,6 +44,7 @@ public class LaunchMissile : MonoBehaviour
         }
     }
 
+    // Button Animation
     private IEnumerator PushButton() {
         Hand.SetActive(true);
         Button.SetActive(false);
@@ -52,6 +54,7 @@ public class LaunchMissile : MonoBehaviour
         Button.SetActive(true);
     }
 
+    // Background Effect
     private IEnumerator BackgroundDim() {
         Color deskColor   = deskSpriteRenderer.color;
         Color buttonColor = buttonSpriteRenderer.color;
@@ -68,6 +71,7 @@ public class LaunchMissile : MonoBehaviour
         StartCoroutine("BackgroundBrightening");
     }
 
+    // Background Effect
     private IEnumerator BackgroundBrightening() {
         Color deskColor = deskSpriteRenderer.color;
         Color buttonColor = buttonSpriteRenderer.color;
