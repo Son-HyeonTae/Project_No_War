@@ -13,4 +13,3 @@
 |   Stage 05   |  Hye-rin Ham  |  Kwon Saem   |
 
 
-store at google drive
